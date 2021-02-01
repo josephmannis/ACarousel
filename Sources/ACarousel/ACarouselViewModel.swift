@@ -35,8 +35,9 @@ class ACarouselViewModel<Data, ID>: ObservableObject where Data : RandomAccessCo
     private let _isWrap: Bool
     private let _sidesScaling: CGFloat
     private let _autoScroll: ACarouselAutoScroll
+    private let _onItemSelected: (Int) -> Void
     
-    init(_ data: Data, id: KeyPath<Data.Element, ID>, index: Binding<Int>, spacing: CGFloat, headspace: CGFloat, sidesScaling: CGFloat, isWrap: Bool, autoScroll: ACarouselAutoScroll) {
+    init(_ data: Data, id: KeyPath<Data.Element, ID>, index: Binding<Int>, spacing: CGFloat, headspace: CGFloat, sidesScaling: CGFloat, isWrap: Bool, autoScroll: ACarouselAutoScroll, onItemSelected: @escaping (Int) -> Void) {
         
         guard index.wrappedValue < data.count else {
             fatalError("The index should be less than the count of data ")
@@ -49,6 +50,7 @@ class ACarouselViewModel<Data, ID>: ObservableObject where Data : RandomAccessCo
         self._isWrap = isWrap
         self._sidesScaling = sidesScaling
         self._autoScroll = autoScroll
+        self._onItemSelected = onItemSelected
         
         if data.count > 1 && isWrap {
             activeIndex = index.wrappedValue + 1
@@ -103,8 +105,8 @@ class ACarouselViewModel<Data, ID>: ObservableObject where Data : RandomAccessCo
 
 extension ACarouselViewModel where ID == Data.Element.ID, Data.Element : Identifiable {
     
-    convenience init(_ data: Data, index: Binding<Int>, spacing: CGFloat, headspace: CGFloat, sidesScaling: CGFloat, isWrap: Bool, autoScroll: ACarouselAutoScroll) {
-        self.init(data, id: \.id, index: index, spacing: spacing, headspace: headspace, sidesScaling: sidesScaling, isWrap: isWrap, autoScroll: autoScroll)
+    convenience init(_ data: Data, index: Binding<Int>, spacing: CGFloat, headspace: CGFloat, sidesScaling: CGFloat, isWrap: Bool, autoScroll: ACarouselAutoScroll, onItemSelected: @escaping (_: Int) -> Void = {_ in}) {
+        self.init(data, id: \.id, index: index, spacing: spacing, headspace: headspace, sidesScaling: sidesScaling, isWrap: isWrap, autoScroll: autoScroll, onItemSelected: onItemSelected)
     }
 }
 
@@ -278,6 +280,7 @@ extension ACarouselViewModel {
             activeIndex += 1
         }
         self.activeIndex = max(0, min(activeIndex, data.count - 1))
+        _onItemSelected(self.activeIndex)
     }
 }
 
