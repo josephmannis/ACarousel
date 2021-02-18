@@ -28,6 +28,7 @@ class ACarouselViewModel<Data, ID>: ObservableObject where Data : RandomAccessCo
     @Binding
     private var index: Int {
         didSet {
+            print("Change binding")
             changeOffset()
         }
     }
@@ -78,9 +79,10 @@ class ACarouselViewModel<Data, ID>: ObservableObject where Data : RandomAccessCo
                 index = newValue
             }
         }
-//        didSet {
-//            changeOffset()
-//        }
+        didSet {
+            print("Change active offset")
+            changeOffset()
+        }
     }
     
     /// Offset x of the view drag.
