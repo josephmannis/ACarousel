@@ -23,7 +23,6 @@ import SwiftUI
 
 @available(iOS 13.0, OSX 10.15, *)
 public struct ACarousel<Data, ID, Content> : View where Data : RandomAccessCollection, ID : Hashable, Content : View {
-//    var onItemSelected: (_: Int) -> Void = {_ in }
 
     @ObservedObject
     private var viewModel: ACarouselViewModel<Data, ID>
@@ -34,11 +33,6 @@ public struct ACarousel<Data, ID, Content> : View where Data : RandomAccessColle
             viewModel.viewSize = proxy.size
             return AnyView(generateContent(proxy: proxy))
         }.clipped()
-    }
-    
-    public func `onItemSelected`(consumer: (_: Int) -> Void) -> some View {
-        consumer(viewModel.activeIndex)
-        return AnyView(self)
     }
     
     private func generateContent(proxy: GeometryProxy) -> some View {

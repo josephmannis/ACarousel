@@ -26,7 +26,11 @@ class ACarouselViewModel<Data, ID>: ObservableObject where Data : RandomAccessCo
     
     /// external index
     @Binding
-    private var index: Int
+    private var index: Int {
+        didSet {
+            changeOffset()
+        }
+    }
     
     private let _data: Data
     private let _dataId: KeyPath<Data.Element, ID>
@@ -74,9 +78,9 @@ class ACarouselViewModel<Data, ID>: ObservableObject where Data : RandomAccessCo
                 index = newValue
             }
         }
-        didSet {
-            changeOffset()
-        }
+//        didSet {
+//            changeOffset()
+//        }
     }
     
     /// Offset x of the view drag.
